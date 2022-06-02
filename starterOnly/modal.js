@@ -27,39 +27,41 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
+
+// IMPLÉMENTATION DES ENTRÉES DU FORMULAIRE
+
 // User informations 
 const userInformations = {
   first : '',
   last : '',
   email : '',
   birthdate : '',
-  quantity : '',
+  quantity : 0,
   location : '',
   conditions : false,
   newsletter : false,
 }
 
-// Modifiation du prénom
-document.getElementById('first').addEventListener('change', function(e) {
-  e.preventDefault;
-  userInformations.first = e.target.value;
-  console.log(userInformations)
-})
+// Implémentation et vérification des informations des entrées conditionnées du formulaire (Vérification en temps réel) - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Modifiation du nom
-document.getElementById('last').addEventListener('change', function(e) {
-  e.preventDefault;
-  userInformations.last = e.target.value;
-  console.log(userInformations)
-})
+/* 
+1 - Vérifier les entrées "Nom" et "Prénom" pour qu'elles fassent plus de deux caractères et implémenter ces données dans l'objet global
+2 - Vérifier l'entrée "Adresse email" pour qu'elle respecte le format d'une adresse email et implémenter la donnée dans l'objet global
+3 - Vérifier l'entrée "Nombre de concours participé" pour qu'elle respecte le format numérique et le min & max, et implémenter la donnée dans l'objet global
+*/
 
-// Modifiation de l'email
-document.getElementById('email').addEventListener('change', function(e) {
-  e.preventDefault;
-  userInformations.email = e.target.value;
-  console.log(userInformations)
-})
+// Implémentation des informations des entrées non conditionnées du formulaire - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+/* 
+1 - Implémenter l'entrée "Date de naissance" lorsqu'elle est modifiée
+2 - Implémenter l'entrée "Localisation du prochain tournoi" lorsqu'elle est modifiée
+3 - Implémenter l'entrée "Acceptation des conditions" lorsqu'elle est modifiée
+4 - Implémenter l'entrée "Newsletter" lorsqu'elle est modifiée
+*/
+
+
+
+// Envoie des donnnées de l'objet "User informations" au moment du clic sur submit - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
