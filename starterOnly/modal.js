@@ -7,16 +7,45 @@ function editNav() {
   }
 }
 
+let isFormSubmitted = false;
+
+let resetUserInformations = function () {
+  if (isFormSubmitted) {
+
+    // Reset de l'objet userInformations :
+
+    userInformations.first = undefined;
+    userInformations.last = undefined;
+    userInformations.email = undefined;
+    userInformations.birthdate = undefined;
+    userInformations.quantity = 0;
+    userInformations.location = undefined;
+    userInformations.conditions = true;
+    userInformations.newsletter = false;
+
+    // Reset des styles des popups :
+
+    document.querySelector('#thanks-modal').style.display = 'none'
+    document.querySelector('#form-modal').style.display = 'block'
+
+    // Reset des données du formulaire et de l'objet userInformations :
+
+    document.querySelector("#registration-form").reset()
+
+  }
+}
+
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
-const modalCloseBtn = document.querySelector(".close");
+const modalCloseBtn = document.querySelectorAll(".close");
 const formData = document.querySelectorAll(".formData");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 // close modal event
-modalCloseBtn.addEventListener('click', closeModal);
+
+modalCloseBtn.forEach((btn) => btn.addEventListener("click", closeModal));
 
 // launch modal form
 function launchModal() {
@@ -25,11 +54,13 @@ function launchModal() {
 // close modal form
 function closeModal() {
   modalbg.style.display = "none";
+  resetUserInformations();
 }
 
 // IMPLÉMENTATION DES ENTRÉES DU FORMULAIRE ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
-// User informations 
+// Informations de l'utilisateur
+
 const userInformations = {
   first: undefined,
   last: undefined,
@@ -39,6 +70,32 @@ const userInformations = {
   location: undefined,
   conditions: true,
   newsletter: false,
+}
+
+// Messages de validation et d'erreur dans la console
+
+const validationMessage = () => {
+  console.log('L\'entrée a bien été modifiée')
+}
+
+const errorMessage = () => {
+  console.log('L\'entrée ne respecte pas le format et a été définie sur undefined')
+}
+
+// Ajout de l'erreur si la valeur de l'entrée est fausse
+
+const displayError = (elt) => {
+
+  const targetedElementParent = document.getElementById(elt).parentElement
+  targetedElementParent.setAttribute('data-error-visible', 'true')
+
+}
+
+const hideError = (elt) => {
+
+  const targetedElementParent = document.getElementById(elt).parentElement
+  targetedElementParent.setAttribute('data-error-visible', 'false')
+
 }
 
 // Implémentation et vérification des informations des entrées conditionnées du formulaire (Vérification en temps réel) - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -52,15 +109,17 @@ const userInformations = {
 
 // Function qui vérifie si la valeur contient deux caractères ou plus
 
-const checkThatValueIsMoreThanTwoCharAndUpdate = function (val) {
+const checkThatValueIsMoreThanTwoCharAndUpdate = function (val, id) {
 
   let currentValue = undefined;
 
   if (val.length >= 2) {
-    console.log('L\'entrée a bien été modifiée')
+    validationMessage()
+    hideError(id)
     currentValue = val;
   } else {
-    console.log('L\'entrée ne respecte pas le format et a été définie sur undefined')
+    errorMessage()
+    displayError(id)
   }
 
   return currentValue
@@ -70,9 +129,9 @@ const checkThatValueIsMoreThanTwoCharAndUpdate = function (val) {
 // Vérification du prénom :
 
 document.querySelector('#first').addEventListener('change', function (e) {
-  let entryValue = e.target.value;
-  checkThatValueIsMoreThanTwoCharAndUpdate(entryValue, first)
-  userInformations.first = checkThatValueIsMoreThanTwoCharAndUpdate(entryValue)
+  let entryValue = e.target.value;  
+  let inputId = e.target.id
+  userInformations.first = checkThatValueIsMoreThanTwoCharAndUpdate(entryValue, inputId)
   console.log(userInformations)
 });
 
@@ -80,7 +139,8 @@ document.querySelector('#first').addEventListener('change', function (e) {
 
 document.querySelector('#last').addEventListener('change', function (e) {
   let entryValue = e.target.value;
-  userInformations.last = checkThatValueIsMoreThanTwoCharAndUpdate(entryValue);
+  let inputId = e.target.id
+  userInformations.last = checkThatValueIsMoreThanTwoCharAndUpdate(entryValue, inputId);
   console.log(userInformations)
 });
 
@@ -88,12 +148,15 @@ document.querySelector('#last').addEventListener('change', function (e) {
 
 document.querySelector('#email').addEventListener('change', function (e) {
   let entryValue = e.target.value;
+  let inputId = e.target.id
 
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(entryValue)) {
-    console.log('L\'entrée a bien été modifiée')
+    validationMessage()
+    hideError(inputId)
     userInformations.email = entryValue;
   } else {
-    console.log('L\'entrée dans "email" ne respecte pas le format demandé')
+    errorMessage()
+    displayError(inputId)
     userInformations.email = undefined;
   }
 
@@ -104,12 +167,15 @@ document.querySelector('#email').addEventListener('change', function (e) {
 
 document.querySelector('#quantity').addEventListener('change', function (e) {
   let entryValue = e.target.value;
+  let inputId = e.target.id
 
-  if (entryValue >= 0 && entryValue <= 99) {
-    console.log('L\'entrée a bien été modifiée')
+  if (entryValue >= 0 && entryValue <= 99 && Number.isInteger(Number.parseInt(entryValue)) ) {
+    validationMessage()
+    hideError(inputId)
     userInformations.quantity = entryValue;
   } else {
-    console.log('L\'entrée dans "Nombre de tournois participés" ne respecte pas le format demandé')
+    errorMessage()
+    displayError(inputId)
     userInformations.quantity = undefined;
   }
 
@@ -147,7 +213,9 @@ const isCheckboxCheckedOrNot = function (val) {
 
 document.querySelector('#birthdate').addEventListener('change', function (e) {
   userInformations.birthdate = e.target.value;
-  console.log('L\'entrée a bien été modifiée')
+  let inputId = e.target.id
+  hideError(inputId)
+  validationMessage()
   console.log(userInformations)
 });
 
@@ -157,9 +225,10 @@ const locationOptions = document.querySelectorAll('input[name="location"]')
 
 locationOptions.forEach(locationOptionUnit => {
 
-  locationOptionUnit.addEventListener('click', function () {
+  locationOptionUnit.addEventListener('click', function (e) {
 
     let currentValue = undefined;
+    let inputId = e.target.id
 
     for (const locationOption of locationOptions) {
       if (locationOption.checked) {
@@ -169,7 +238,8 @@ locationOptions.forEach(locationOptionUnit => {
     }
 
     userInformations.location = currentValue;
-    console.log('L\'entrée a bien été modifiée')
+    validationMessage()
+    hideError(inputId)
     console.log(userInformations)
 
   })
@@ -178,16 +248,17 @@ locationOptions.forEach(locationOptionUnit => {
 });
 
 
-
 // Changement d'état de l'entrée "Acceptation des CGU"
 
 document.querySelector('#checkbox1').addEventListener('change', function (e) {
 
   let currentCheckbox = document.querySelector('#checkbox1')
+  let inputId = e.target.id
 
   userInformations.conditions = isCheckboxCheckedOrNot(currentCheckbox)
 
-  console.log('L\'entrée a bien été modifiée')
+  validationMessage()
+  hideError(inputId)
   console.log(userInformations)
 
 });
@@ -201,11 +272,24 @@ document.querySelector('#checkbox2').addEventListener('change', function (e) {
 
   userInformations.newsletter = isCheckboxCheckedOrNot(currentCheckbox)
 
-  console.log('L\'entrée a bien été modifiée')
+  validationMessage()
   console.log(userInformations)
 
 });
 
+// Si le formulaire est invalide, lancer la fonction de vérification - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const checkValuesAndDisplayMessage = () => {
+
+  let birthdateId = document.querySelector('#birthdate').id;
+  let localisationId = document.querySelector('#location1').id;
+  let conditionsId = document.querySelector('#checkbox1').id;
+
+  userInformations.birthdate ? hideError(birthdateId) : displayError(birthdateId);
+  userInformations.location ? hideError(localisationId) : displayError(localisationId);
+  userInformations.conditions ? hideError(conditionsId) : displayError(conditionsId);
+
+}
 
 // Envoie des donnnées de l'objet "User informations" au moment du clic sur submit - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -223,8 +307,13 @@ document.querySelector('#registration-form').addEventListener('submit', function
     userInformations.conditions
   ) {
     console.log('Tout les éléments sont valides : le formulaire est envoyé')
+    document.querySelector('#form-modal').style.display = 'none'
+    document.querySelector('#thanks-modal').style.display = 'flex'
+    isFormSubmitted = true;
+
   } else {
     console.log('Un ou plusieurs éléments sont invalides : le formulaire ne peut pas être envoyé')
+    checkValuesAndDisplayMessage()
   }
 
 });
