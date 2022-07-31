@@ -277,7 +277,7 @@ let isFormSubmitted = false;
 
 let resetUserInformations = function () {
 
-  if (isFormSubmitted) {
+  if (isFormSubmitted) {  
 
     // Reset de l'objet userInformations :
 
