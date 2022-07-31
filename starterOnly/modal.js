@@ -20,7 +20,7 @@ let resetUserInformations = function () {
     userInformations.birthdate = undefined;
     userInformations.quantity = 0;
     userInformations.location = undefined;
-    userInformations.conditions = true;
+    userInformations.conditions = false;
     userInformations.newsletter = false;
 
     // Reset des styles des popups :
@@ -68,7 +68,7 @@ const userInformations = {
   birthdate: undefined,
   quantity: 0,
   location: undefined,
-  conditions: true,
+  conditions: false,
   newsletter: false,
 }
 
@@ -281,10 +281,16 @@ document.querySelector('#checkbox2').addEventListener('change', function (e) {
 
 const checkValuesAndDisplayMessage = () => {
 
+  let firstId = document.querySelector('#first').id;
+  let lastId = document.querySelector('#last').id;
+  let emailId = document.querySelector('#email').id;
   let birthdateId = document.querySelector('#birthdate').id;
   let localisationId = document.querySelector('#location1').id;
   let conditionsId = document.querySelector('#checkbox1').id;
 
+  userInformations.first ? hideError(firstId) : displayError(firstId);
+  userInformations.last ? hideError(lastId) : displayError(lastId);
+  userInformations.email ? hideError(emailId) : displayError(emailId);
   userInformations.birthdate ? hideError(birthdateId) : displayError(birthdateId);
   userInformations.location ? hideError(localisationId) : displayError(localisationId);
   userInformations.conditions ? hideError(conditionsId) : displayError(conditionsId);
