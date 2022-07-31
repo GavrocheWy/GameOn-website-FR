@@ -7,34 +7,6 @@ function editNav() {
   }
 }
 
-let isFormSubmitted = false;
-
-let resetUserInformations = function () {
-  if (isFormSubmitted) {
-
-    // Reset de l'objet userInformations :
-
-    userInformations.first = undefined;
-    userInformations.last = undefined;
-    userInformations.email = undefined;
-    userInformations.birthdate = undefined;
-    userInformations.quantity = 0;
-    userInformations.location = undefined;
-    userInformations.conditions = false;
-    userInformations.newsletter = false;
-
-    // Reset des styles des popups :
-
-    document.querySelector('#thanks-modal').style.display = 'none'
-    document.querySelector('#form-modal').style.display = 'block'
-
-    // Reset des données du formulaire et de l'objet userInformations :
-
-    document.querySelector("#registration-form").reset()
-
-  }
-}
-
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
@@ -57,8 +29,6 @@ function closeModal() {
   resetUserInformations();
 }
 
-// IMPLÉMENTATION DES ENTRÉES DU FORMULAIRE ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-
 // Informations de l'utilisateur
 
 const userInformations = {
@@ -72,16 +42,6 @@ const userInformations = {
   newsletter: false,
 }
 
-// Messages de validation et d'erreur dans la console
-
-const validationMessage = () => {
-  console.log('L\'entrée a bien été modifiée')
-}
-
-const errorMessage = () => {
-  console.log('L\'entrée ne respecte pas le format et a été définie sur undefined')
-}
-
 // Ajout de l'erreur si la valeur de l'entrée est fausse
 
 const displayError = (elt) => {
@@ -90,6 +50,8 @@ const displayError = (elt) => {
   targetedElementParent.setAttribute('data-error-visible', 'true')
 
 }
+
+// Suprression de l'erreur si la valeur de l'entrée est valide
 
 const hideError = (elt) => {
 
@@ -114,11 +76,9 @@ const checkThatValueIsMoreThanTwoCharAndUpdate = function (val, id) {
   let currentValue = undefined;
 
   if (val.length >= 2) {
-    validationMessage()
     hideError(id)
     currentValue = val;
   } else {
-    errorMessage()
     displayError(id)
   }
 
@@ -129,7 +89,7 @@ const checkThatValueIsMoreThanTwoCharAndUpdate = function (val, id) {
 // Vérification du prénom :
 
 document.querySelector('#first').addEventListener('change', function (e) {
-  let entryValue = e.target.value;  
+  let entryValue = e.target.value;
   let inputId = e.target.id
   userInformations.first = checkThatValueIsMoreThanTwoCharAndUpdate(entryValue, inputId)
   console.log(userInformations)
@@ -151,11 +111,9 @@ document.querySelector('#email').addEventListener('change', function (e) {
   let inputId = e.target.id
 
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(entryValue)) {
-    validationMessage()
     hideError(inputId)
     userInformations.email = entryValue;
   } else {
-    errorMessage()
     displayError(inputId)
     userInformations.email = undefined;
   }
@@ -169,12 +127,10 @@ document.querySelector('#quantity').addEventListener('change', function (e) {
   let entryValue = e.target.value;
   let inputId = e.target.id
 
-  if (entryValue >= 0 && entryValue <= 99 && Number.isInteger(Number.parseInt(entryValue)) ) {
-    validationMessage()
+  if (entryValue >= 0 && entryValue <= 99 && Number.isInteger(Number.parseInt(entryValue))) {
     hideError(inputId)
     userInformations.quantity = entryValue;
   } else {
-    errorMessage()
     displayError(inputId)
     userInformations.quantity = undefined;
   }
@@ -208,14 +164,12 @@ const isCheckboxCheckedOrNot = function (val) {
 
 }
 
-
 // Implémentation de l'entrée "Date de naissance"
 
 document.querySelector('#birthdate').addEventListener('change', function (e) {
   userInformations.birthdate = e.target.value;
   let inputId = e.target.id
   hideError(inputId)
-  validationMessage()
   console.log(userInformations)
 });
 
@@ -238,7 +192,6 @@ locationOptions.forEach(locationOptionUnit => {
     }
 
     userInformations.location = currentValue;
-    validationMessage()
     hideError(inputId)
     console.log(userInformations)
 
@@ -246,7 +199,6 @@ locationOptions.forEach(locationOptionUnit => {
 
 
 });
-
 
 // Changement d'état de l'entrée "Acceptation des CGU"
 
@@ -256,13 +208,10 @@ document.querySelector('#checkbox1').addEventListener('change', function (e) {
   let inputId = e.target.id
 
   userInformations.conditions = isCheckboxCheckedOrNot(currentCheckbox)
-
-  validationMessage()
   hideError(inputId)
   console.log(userInformations)
 
 });
-
 
 // Changement d'état de l'entrée "Newsletter"
 
@@ -271,31 +220,9 @@ document.querySelector('#checkbox2').addEventListener('change', function (e) {
   let currentCheckbox = document.querySelector('#checkbox2')
 
   userInformations.newsletter = isCheckboxCheckedOrNot(currentCheckbox)
-
-  validationMessage()
   console.log(userInformations)
 
 });
-
-// Si le formulaire est invalide, lancer la fonction de vérification - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-const checkValuesAndDisplayMessage = () => {
-
-  let firstId = document.querySelector('#first').id;
-  let lastId = document.querySelector('#last').id;
-  let emailId = document.querySelector('#email').id;
-  let birthdateId = document.querySelector('#birthdate').id;
-  let localisationId = document.querySelector('#location1').id;
-  let conditionsId = document.querySelector('#checkbox1').id;
-
-  userInformations.first ? hideError(firstId) : displayError(firstId);
-  userInformations.last ? hideError(lastId) : displayError(lastId);
-  userInformations.email ? hideError(emailId) : displayError(emailId);
-  userInformations.birthdate ? hideError(birthdateId) : displayError(birthdateId);
-  userInformations.location ? hideError(localisationId) : displayError(localisationId);
-  userInformations.conditions ? hideError(conditionsId) : displayError(conditionsId);
-
-}
 
 // Envoie des donnnées de l'objet "User informations" au moment du clic sur submit - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -324,6 +251,57 @@ document.querySelector('#registration-form').addEventListener('submit', function
 
 });
 
+// Si le formulaire est invalide, lancer la fonction de vérification - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const checkValuesAndDisplayMessage = () => {
+
+  let firstId = document.querySelector('#first').id;
+  let lastId = document.querySelector('#last').id;
+  let emailId = document.querySelector('#email').id;
+  let birthdateId = document.querySelector('#birthdate').id;
+  let localisationId = document.querySelector('#location1').id;
+  let conditionsId = document.querySelector('#checkbox1').id;
+
+  userInformations.first ? hideError(firstId) : displayError(firstId);
+  userInformations.last ? hideError(lastId) : displayError(lastId);
+  userInformations.email ? hideError(emailId) : displayError(emailId);
+  userInformations.birthdate ? hideError(birthdateId) : displayError(birthdateId);
+  userInformations.location ? hideError(localisationId) : displayError(localisationId);
+  userInformations.conditions ? hideError(conditionsId) : displayError(conditionsId);
+
+}
+
+// Reset des informations lorsqu'un formulaire est envoyé  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+let isFormSubmitted = false;
+
+let resetUserInformations = function () {
+
+  if (isFormSubmitted) {
+
+    // Reset de l'objet userInformations :
+
+    userInformations.first = undefined;
+    userInformations.last = undefined;
+    userInformations.email = undefined;
+    userInformations.birthdate = undefined;
+    userInformations.quantity = 0;
+    userInformations.location = undefined;
+    userInformations.conditions = false;
+    userInformations.newsletter = false;
+
+    // Reset des styles des popups :
+
+    document.querySelector('#thanks-modal').style.display = 'none'
+    document.querySelector('#form-modal').style.display = 'block'
+
+    // Reset des données du formulaire et de l'objet userInformations :
+
+    document.querySelector("#registration-form").reset()
+
+  }
+
+}
 
 
 
