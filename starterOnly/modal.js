@@ -16,13 +16,13 @@ const formData = document.querySelectorAll(".formData");
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 // close modal event
-
 modalCloseBtn.forEach((btn) => btn.addEventListener("click", closeModal));
 
 // launch modal form
 function launchModal() {
   modalbg.style.display = "block";
 }
+
 // close modal form
 function closeModal() {
   modalbg.style.display = "none";
@@ -75,7 +75,7 @@ const checkThatValueIsMoreThanTwoCharAndUpdate = function (val, id) {
 
   let currentValue = undefined;
 
-  if (val.length >= 2) {
+  if (val.length >= 2 && /^[A-Za-z]+$/.test(val)) {
     hideError(id)
     currentValue = val;
   } else {
